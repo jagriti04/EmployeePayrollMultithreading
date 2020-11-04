@@ -8,8 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class EmployeePayrollDBService {
 	private PreparedStatement employeePayrollDataStatement;
@@ -84,8 +86,9 @@ public class EmployeePayrollDBService {
 				int id = resultSet.getInt("id");
 				String name = resultSet.getString("name");
 				double salary = resultSet.getDouble("salary");
+				String gender = resultSet.getString("gender");
 				LocalDate startDate = resultSet.getDate("start").toLocalDate();
-				empPayrollDataList.add(new EmployeePayrollData(id, name, salary, startDate));
+				empPayrollDataList.add(new EmployeePayrollData(id, name, gender, salary, startDate));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,15 +142,13 @@ public class EmployeePayrollDBService {
 	public EmployeePayrollData addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate) {
 		int employeeID = -1;
 		EmployeePayrollData empPayrollData = null;
-		String sql = String.format("INSERT INTO employee_payroll (name, gender, salary, start)" + 
-					"VALUES ('%s', '%s', '%s', '%s')", name, gender, salary, Date.valueOf(startDate));
+		String sql = String.format("INSERT INTO employee_payroll (name, gender, salary, start) VALUES ('%s', '%s', '%s', '%s');", name, gender, salary, Date.valueOf(startDate));
 		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
 			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
 			if(rowAffected == 1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
 				if (resultSet.next()) employeeID = resultSet.getInt(1);
-				System.out.println(resultSet.getInt(1));
 			}
 			empPayrollData = new EmployeePayrollData(employeeID, name, salary, startDate);
 		} catch (SQLException e) {

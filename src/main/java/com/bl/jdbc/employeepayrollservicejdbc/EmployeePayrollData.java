@@ -2,13 +2,22 @@ package com.bl.jdbc.employeepayrollservicejdbc;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 public class EmployeePayrollData {
 	private int empId;
 	private String empName;
 	private double empSalary;
 	private LocalDate startDate;
-	public String gender;
+	private String gender;
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
 	public EmployeePayrollData(int id, String name, double salary) {
 		this.empId = id;
@@ -27,7 +36,7 @@ public class EmployeePayrollData {
 	}
 
 	public String toString() {
-		return "id=" + empId + ", name=" + empName + ", salary=" + empSalary;
+		return "id=" + empId + ", name=" + empName + ", salary=" + empSalary + ", gender=" + gender + ", date= "+startDate;
 	}
 
 	public int getEmpId() {
@@ -60,6 +69,11 @@ public class EmployeePayrollData {
 
 	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(empName, gender, empSalary, startDate);
 	}
 
 	@Override

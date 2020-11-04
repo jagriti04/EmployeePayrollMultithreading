@@ -1,0 +1,21 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007fa509c13401, pid=31102, tid=31120
+#
+# JRE version: OpenJDK Runtime Environment (11.0.9+11) (build 11.0.9+11-Ubuntu-0ubuntu1.18.04.1)
+# Java VM: OpenJDK 64-Bit Server VM (11.0.9+11-Ubuntu-0ubuntu1.18.04.1, mixed mode, sharing, tiered, compressed oops, g1 gc, linux-amd64)
+# Problematic frame:
+# C  [libjimage.so+0x2401]
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport %p %s %c %d %P %E" (or dumping to /home/jagriti/capG/eclipse-workspace1/EmployeePayrollServiceMultiThreading/core.31102)
+#
+# If you would like to submit a bug report, please visit:
+#   https://bugs.launchpad.net/ubuntu/+source/openjdk-lts
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:43567 -ea -javaagent:/home/jagriti/capG/softwares/eclipse-java-2020-09-R-linux-gtk-x86_64/eclipse/configuration/org.eclipse.osgi/210/0/.cp/lib/javaagent-shaded.jar -Dfile.encoding=UTF-8 org.eclipse.jdt.internal.junit.runner.RemoteTestRunner -version 3 -port 39833 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.jdt.junit4.runtime -classNames com.bl.jdbc.employeepayrollservicejdbc.EmployeePayrollTest
+
+Host: 

@@ -1,5 +1,6 @@
 package com.bl.jdbc.employeepayrollservicejdbc;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -63,6 +64,23 @@ public class EmployeePayrollService {
 		empPayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, startDate, companyName,
 				departmentName));
 
+	}
+	
+	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate) {
+		empPayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, startDate));
+	}
+	
+	public void addEmployeeToPayroll(List<EmployeePayrollData> asList) {
+		asList.forEach(empPayrollData -> {
+			System.out.println("Employee being added: " + empPayrollData.getEmpName());
+			this.addEmployeeToPayroll(empPayrollData.getEmpName(), empPayrollData.getGender(), empPayrollData.getEmpSalary(), LocalDate.now());
+			System.out.println("Employee Added: " + empPayrollData.getEmpName());
+		});
+		System.out.println(this.empPayrollList);
+	}
+
+	public long countEntries() {
+		return empPayrollList.size();
 	}
 
 }
