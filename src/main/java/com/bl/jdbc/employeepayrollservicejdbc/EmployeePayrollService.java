@@ -2,7 +2,9 @@ package com.bl.jdbc.employeepayrollservicejdbc;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmployeePayrollService {
 	public enum IOService {
@@ -65,18 +67,42 @@ public class EmployeePayrollService {
 				departmentName));
 
 	}
-	
+
 	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate) {
 		empPayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, startDate));
 	}
-	
-	public void addEmployeeToPayroll(List<EmployeePayrollData> asList) {
-		asList.forEach(empPayrollData -> {
+
+	public void addEmployeeToPayroll(List<EmployeePayrollData> empList) {
+		empList.forEach(empPayrollData -> {
 			System.out.println("Employee being added: " + empPayrollData.getEmpName());
-			this.addEmployeeToPayroll(empPayrollData.getEmpName(), empPayrollData.getGender(), empPayrollData.getEmpSalary(), LocalDate.now());
+			this.addEmployeeToPayroll(empPayrollData.getEmpName(), empPayrollData.getGender(),
+					empPayrollData.getEmpSalary(), LocalDate.now());
 			System.out.println("Employee Added: " + empPayrollData.getEmpName());
 		});
 		System.out.println(this.empPayrollList);
+	}
+
+	public void addEmployeesToPayrollWithThreads(List<EmployeePayrollData> empDataList) {
+		Map<Integer, Boolean> employeeAdditionStatus = new HashMap<Integer, Boolean>();
+		empDataList.forEach(empPayrollData -> {
+			Runnable task = () -> {
+				employeeAdditionStatus.put(empPayrollData.hashCode(), false);
+				System.out.println("Employee being added: " + Thread.currentThread().getName());
+				this.addEmployeeToPayroll(empPayrollData.getEmpName(), empPayrollData.getGender(),
+						empPayrollData.getEmpSalary(), LocalDate.now());
+				employeeAdditionStatus.put(empPayrollData.hashCode(), true);
+				System.out.println("Employee added: " + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, empPayrollData.getEmpName());
+			thread.start();
+		});
+		while (employeeAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public long countEntries() {

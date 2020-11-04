@@ -36,7 +36,8 @@ public class EmployeePayrollData {
 	}
 
 	public String toString() {
-		return "id=" + empId + ", name=" + empName + ", salary=" + empSalary + ", gender=" + gender + ", date= "+startDate;
+		return "id=" + empId + ", name=" + empName + ", salary=" + empSalary + ", gender=" + gender + ", date= "
+				+ startDate;
 	}
 
 	public int getEmpId() {
@@ -70,7 +71,7 @@ public class EmployeePayrollData {
 	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(empName, gender, empSalary, startDate);

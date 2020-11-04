@@ -139,16 +139,20 @@ public class EmployeePayrollDBService {
 		}
 		return avgSalary;
 	}
+
 	public EmployeePayrollData addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate) {
 		int employeeID = -1;
 		EmployeePayrollData empPayrollData = null;
-		String sql = String.format("INSERT INTO employee_payroll (name, gender, salary, start) VALUES ('%s', '%s', '%s', '%s');", name, gender, salary, Date.valueOf(startDate));
+		String sql = String.format(
+				"INSERT INTO employee_payroll (name, gender, salary, start) VALUES ('%s', '%s', '%s', '%s');", name,
+				gender, salary, Date.valueOf(startDate));
 		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
 			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
-			if(rowAffected == 1) {
+			if (rowAffected == 1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
-				if (resultSet.next()) employeeID = resultSet.getInt(1);
+				if (resultSet.next())
+					employeeID = resultSet.getInt(1);
 			}
 			empPayrollData = new EmployeePayrollData(employeeID, name, salary, startDate);
 		} catch (SQLException e) {
@@ -197,7 +201,7 @@ public class EmployeePayrollDBService {
 		if (rowAffected == 1) {
 			employeePayrollData = new EmployeePayrollData(employeeId, name, gender, salary, startDate);
 		}
-		
+
 		try {
 			connection.commit();
 		} catch (SQLException e) {
