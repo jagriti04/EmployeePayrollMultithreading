@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class EmployeePayrollDBService {
+	private int connectionCounter = 0;
 	private PreparedStatement employeePayrollDataStatement;
 	private static EmployeePayrollDBService employeePayrollDBService;
 
@@ -28,12 +29,18 @@ public class EmployeePayrollDBService {
 		return employeePayrollDBService;
 	}
 
-	private Connection getConnection() throws SQLException {
+	private synchronized Connection getConnection() throws SQLException {
+		connectionCounter++;
 		String jdbcURl = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
 		String userName = "root";
 		String password = "treadwill04";
 		Connection con;
 		con = DriverManager.getConnection(jdbcURl, userName, password);
+		System.out.println("Processing Thread: " + Thread.currentThread().getName() + "Connecting to database with Id: "
+				+ connectionCounter);
+		con = DriverManager.getConnection(jdbcURl, userName, password); // used DriverManager to get the connection
+		System.out.println("Processing Thread: " + Thread.currentThread().getName() + " Id: " + connectionCounter
+				+ " Connection is successful !!!!" + con);
 		return con;
 	}
 
