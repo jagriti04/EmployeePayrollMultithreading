@@ -109,4 +109,26 @@ public class EmployeePayrollService {
 		return empPayrollList.size();
 	}
 
+	public void updateEmployeeSalary(Map<String, Double> nameToSalaryMap) {
+		Map<Integer, Boolean> employeeAdditionStatus = new HashMap<Integer, Boolean>();
+		nameToSalaryMap.forEach((name, salary) ->{
+			Runnable task = () -> {
+				employeeAdditionStatus.put(employeeAdditionStatus.hashCode(), false);
+				System.out.println("Salary being updated: " + Thread.currentThread().getName());
+				this.updateEmployeeSalary(name, salary);
+				employeeAdditionStatus.put(employeeAdditionStatus.hashCode(), true);
+				System.out.println("Salary updated: " + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, name);
+			thread.start();
+		});
+		while (employeeAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 }
