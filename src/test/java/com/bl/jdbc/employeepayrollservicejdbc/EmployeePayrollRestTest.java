@@ -43,9 +43,9 @@ public class EmployeePayrollRestTest {
 	public void givenEmployeeDataInJSONServer_whenRetrieved_shouldReturnCorrectEntryCount() {
 		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
 		EmployeePayrollService employeePayrollService;
-		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		employeePayrollService = new EmployeePayrollService(new ArrayList<>(Arrays.asList(arrayOfEmps)));
 		long entries = employeePayrollService.countEntries();
-		Assert.assertEquals(6, entries);
+		Assert.assertEquals(5, entries);
 	}
 
 	// UC1
@@ -63,7 +63,7 @@ public class EmployeePayrollRestTest {
 		employeePayrollService.addEmployeeToPayroll(empData, EmployeePayrollService.IOService.REST_IO);
 
 		long entries = employeePayrollService.countEntries();
-		Assert.assertEquals(6, entries);
+		Assert.assertEquals(5, entries);
 	}
 
 	// UC2
@@ -85,6 +85,24 @@ public class EmployeePayrollRestTest {
 			employeePayrollService.addEmployeeToPayroll(employeePayrollData, EmployeePayrollService.IOService.REST_IO);
 		}
 		long entries = employeePayrollService.countEntries();
-		Assert.assertEquals(9, entries);
+		Assert.assertEquals(8, entries);
+	}
+	
+	//UC3
+	@Test
+	public void givenNewSalaryForEmployee_whenUpdated_shouldMatch200Response() {
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(new ArrayList<>(Arrays.asList(arrayOfEmps)));
+
+		employeePayrollService.updateEmployeeSalary("Anil", 300000.0, EmployeePayrollService.IOService.REST_IO);
+		EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayrollData("Anil");
+		String empJson = new Gson().toJson(employeePayrollData);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(empJson);
+		Response response = request.put("/employees/"+employeePayrollData.id);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
 	}
 }

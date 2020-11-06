@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class EmployeePayrollData {
+	public int id;
 	private int empId;
 	private String empName;
 	private double empSalary;
