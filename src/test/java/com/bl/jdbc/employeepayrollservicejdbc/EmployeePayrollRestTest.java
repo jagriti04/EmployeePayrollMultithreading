@@ -1,7 +1,10 @@
 package com.bl.jdbc.employeepayrollservicejdbc;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +27,6 @@ public class EmployeePayrollRestTest {
 
 	private EmployeePayrollData[] getEmployeeList() {
 		Response response = RestAssured.get("/employees");
-//		System.out.println("Employee entries:"+response.asString());
 		EmployeePayrollData[] arrayOfEmps = new Gson().fromJson(response.asString(), EmployeePayrollData[].class);
 		return arrayOfEmps;
 	}
@@ -46,6 +48,7 @@ public class EmployeePayrollRestTest {
 		Assert.assertEquals(6, entries);
 	}
 
+	// UC1
 	@Test
 	public void givenNewEmployee_whenAdded_shouldMatch201ResponseAndCount() {
 		EmployeePayrollService employeePayrollService;
@@ -60,7 +63,28 @@ public class EmployeePayrollRestTest {
 		employeePayrollService.addEmployeeToPayroll(empData, EmployeePayrollService.IOService.REST_IO);
 
 		long entries = employeePayrollService.countEntries();
-
 		Assert.assertEquals(6, entries);
+	}
+
+	// UC2
+	@Test
+	public void givenListOfNewEmployee_whenAdded_shouldMatch201ResponseAndCount() {
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(new ArrayList<>(Arrays.asList(arrayOfEmps)));
+
+		EmployeePayrollData[] arrayOfEmpPayrolls = { new EmployeePayrollData(0, "Sam", 100000.0),
+				new EmployeePayrollData(0, "Harry", 600000.0), new EmployeePayrollData(0, "Roohi", 700000.0) };
+
+		for (EmployeePayrollData employeePayrollData : arrayOfEmpPayrolls) {
+			Response response = addEmployeeToJsonServer(employeePayrollData);
+			int statusCode = response.getStatusCode();
+			Assert.assertEquals(201, statusCode);
+			
+			employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+			employeePayrollService.addEmployeeToPayroll(employeePayrollData, EmployeePayrollService.IOService.REST_IO);
+		}
+		long entries = employeePayrollService.countEntries();
+		Assert.assertEquals(9, entries);
 	}
 }
