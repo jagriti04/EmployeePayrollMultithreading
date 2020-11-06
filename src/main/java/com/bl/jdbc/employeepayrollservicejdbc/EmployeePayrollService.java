@@ -21,6 +21,7 @@ public class EmployeePayrollService {
 
 	// Parameterized constructor
 	public EmployeePayrollService(List<EmployeePayrollData> empPayrollList) {
+		this();
 		this.empPayrollList = empPayrollList;
 	}
 
@@ -111,7 +112,7 @@ public class EmployeePayrollService {
 
 	public void updateEmployeeSalary(Map<String, Double> nameToSalaryMap) {
 		Map<Integer, Boolean> employeeAdditionStatus = new HashMap<Integer, Boolean>();
-		nameToSalaryMap.forEach((name, salary) ->{
+		nameToSalaryMap.forEach((name, salary) -> {
 			Runnable task = () -> {
 				employeeAdditionStatus.put(employeeAdditionStatus.hashCode(), false);
 				System.out.println("Salary being updated: " + Thread.currentThread().getName());
