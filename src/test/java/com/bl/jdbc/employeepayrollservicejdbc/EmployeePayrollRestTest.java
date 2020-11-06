@@ -39,13 +39,14 @@ public class EmployeePayrollRestTest {
 		return request.post("/employees");
 	}
 
+	// uc4
 	@Test
 	public void givenEmployeeDataInJSONServer_whenRetrieved_shouldReturnCorrectEntryCount() {
 		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
 		EmployeePayrollService employeePayrollService;
 		employeePayrollService = new EmployeePayrollService(new ArrayList<>(Arrays.asList(arrayOfEmps)));
 		long entries = employeePayrollService.countEntries();
-		Assert.assertEquals(5, entries);
+		Assert.assertEquals(4, entries);
 	}
 
 	// UC1
@@ -80,15 +81,15 @@ public class EmployeePayrollRestTest {
 			Response response = addEmployeeToJsonServer(employeePayrollData);
 			int statusCode = response.getStatusCode();
 			Assert.assertEquals(201, statusCode);
-			
+
 			employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
 			employeePayrollService.addEmployeeToPayroll(employeePayrollData, EmployeePayrollService.IOService.REST_IO);
 		}
 		long entries = employeePayrollService.countEntries();
-		Assert.assertEquals(8, entries);
+		Assert.assertEquals(7, entries);
 	}
-	
-	//UC3
+
+	// UC3
 	@Test
 	public void givenNewSalaryForEmployee_whenUpdated_shouldMatch200Response() {
 		EmployeePayrollService employeePayrollService;
@@ -101,8 +102,27 @@ public class EmployeePayrollRestTest {
 		RequestSpecification request = RestAssured.given();
 		request.header("Content-Type", "application/json");
 		request.body(empJson);
-		Response response = request.put("/employees/"+employeePayrollData.id);
+		Response response = request.put("/employees/" + employeePayrollData.id);
 		int statusCode = response.getStatusCode();
 		Assert.assertEquals(200, statusCode);
+	}
+
+	// UC5
+	@Test
+	public void givenEmployeeToDelete_whenDeleted_shouldMatch200ResponseAndCount() {
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData[] arrayOfEmps = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(new ArrayList<>(Arrays.asList(arrayOfEmps)));
+
+		EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayrollData("Jeff");
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		Response response = request.delete("/employees/" + employeePayrollData.id);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
+		
+		employeePayrollService.deleteEmployeePayroll(employeePayrollData.getEmpName(), EmployeePayrollService.IOService.REST_IO);
+		long entries = employeePayrollService.countEntries();
+		Assert.assertEquals(4, entries);
 	}
 }

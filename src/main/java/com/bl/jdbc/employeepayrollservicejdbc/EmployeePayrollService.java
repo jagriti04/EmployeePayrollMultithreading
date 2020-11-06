@@ -139,4 +139,11 @@ public class EmployeePayrollService {
 		}
 	}
 
+	public void deleteEmployeePayroll(String empName, IOService ioService) {
+		if(ioService.equals(IOService.REST_IO)) {
+			EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(empName);
+			empPayrollList.remove(employeePayrollData);
+		}
+	}
+
 }
