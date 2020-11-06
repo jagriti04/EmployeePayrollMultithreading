@@ -106,6 +106,11 @@ public class EmployeePayrollService {
 		}
 	}
 
+	// Using Json server, REST_IO
+	public void addEmployeeToPayroll(EmployeePayrollData empPayrollData, IOService ioService) {
+		this.empPayrollList.add(empPayrollData);
+	}
+
 	public long countEntries() {
 		return empPayrollList.size();
 	}
